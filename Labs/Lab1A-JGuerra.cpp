@@ -2,7 +2,7 @@
 // Lab1A
 // By JGuerra
 // Created:			1.27.16
-// Last Modified:	1.27.16
+// Last Modified:	1.28.16
 
 /*
 ANALYSIS
@@ -62,7 +62,7 @@ int main() {
 	double myDouble = 123.45;
 	double *myDoublePointer = &myDouble;
 
-	float myFloat = 1.2;
+	float myFloat = 1.2f;
 	float *myFloatPointer = &myFloat;
 
 	cout
@@ -81,43 +81,7 @@ int main() {
 		<< "value myCharPointer is looking at: " << *myCharPointer
 		<< endl << endl;
 
-
-
-	p = &b;
-
-	cout
-		<< "value2: " << b << endl
-		<< "address of value2: " << &b << endl
-		<< "value of pointer: " << p << endl
-		<< "value where pointer is looking: " << *p
-		<< endl << endl;
-
-	*p = 14;
-
-	cout
-		<< "value1: " << b << endl
-		<< "address of value1: " << &b << endl
-		<< "value of pointer: " << p << endl
-		<< "value where pointer is looking: " << *p
-		<< endl << endl << "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ " << endl;
-
-	p = &c;
-
-	cout
-		<< "value: " << c << endl
-		<< "address of value: " << &c << endl
-		<< "value of pointer: " << p << endl
-		<< "value where pointer is looking: " << *p
-		<< endl << endl;
-
-	*p = 15;
-
-	cout
-		<< "value1: " << c << endl
-		<< "address of value1: " << &c << endl
-		<< "value of pointer: " << p << endl
-		<< "value where pointer is looking: " << *p
-		<< endl << endl << "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ " << endl;
+	cout << "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ " << endl << endl;
 
 	system("pause");
 	return 0;
