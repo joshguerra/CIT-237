@@ -2,7 +2,7 @@
 // Lab1A
 // By JGuerra
 // Created:			1.27.16
-// Last Modified:	1.28.16
+// Last Modified:	1.31.16
 
 /*
 ANALYSIS
@@ -41,7 +41,6 @@ print again
 
 Wash. Rinse. Repeat starting at print statements for each different variable and its corresponding pointer.
 */
-
 
 #include <iostream>
 #include <string>
