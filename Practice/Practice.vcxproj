@@ -10,6 +10,9 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="pointerArithmetic.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{743F7860-44F8-4DBD-8F30-4D9F61981231}</ProjectGuid>
     <RootNamespace>Practice</RootNamespace>
