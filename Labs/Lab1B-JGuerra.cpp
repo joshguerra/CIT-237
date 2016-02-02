@@ -48,10 +48,9 @@ void printStringArray(string a[], int n, ostream &os = cout);
 
 
 //  Pre Condition:  0 < n
-// Post Condition:  Creates a new string array starting at p with length of n
+// Post Condition:  Creates a new string array with length of n
 //					Prompts user for string (and loads it into the new array) n times
-//					Sets isLoaded to true
-void loadStringArray(string a[], int n);
+string* loadStringArray(int n);
 
 //  Pre Condition:	NONE
 // Post Condition:	Returns a valid positive integer
@@ -87,11 +86,6 @@ void main() {
 	};
 
 	string *groceryList = nullptr;
-	/*length = 3;
-	groceryList = new string[length];
-	groceryList[0] = "beans";
-	groceryList[1] = "rice";
-	groceryList[2] = "tortillas";*/
 
 	printStringArray(title, SIZE_TITLE);
 	cout << "\n\n";
@@ -99,10 +93,12 @@ void main() {
 	// prompt for list length
 	cout << "How many items will be on your grocery list? ";
 	length = getPosInt();
-	cout << endl;
 
-	loadStringArray(groceryList, length);
+	groceryList = loadStringArray(length);
+
+	cout << "\nHere is your grocery list: ";
 	printStringArray(groceryList, length);
+	cout << "\n\n";
 
 	system("pause");
 }
@@ -112,13 +108,15 @@ void printStringArray(string a[], int n, ostream &os) {
 		os << "\n" << a[i];
 }
 
-void loadStringArray(string a[], int n) {
-	a = new string[n];
+string* loadStringArray(int n) {
+	string *a = new string[n];
 
 	for (int i = 0; i < n; i++) {
 		cout << "What would you like to add to the grocery list? ";
 		getline(cin >> ws, a[i]);
 	}
+
+	return a;
 }
 
 int getPosInt() {
