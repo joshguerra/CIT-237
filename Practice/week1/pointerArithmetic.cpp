@@ -25,8 +25,7 @@ int main() {
 	// reprint
 	cout
 		<< "Here are the variables  now: " << endl
-		<< "x: " << x << "\ty: " << y << "\tz: " << z << endl
-		<< "Here is the value of ptr: " << ptr << endl;
+		<< "x: " << x << "\ty: " << y << "\tz: " << z << "\n\n";
 
 	system("pause");
 	return 0;
