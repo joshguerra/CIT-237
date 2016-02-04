@@ -1,9 +1,9 @@
 /*
 	Grocery List - dynamically loading arrays
-	FILE: Lab1B-1-JGuerra
+	FILE: Lab1B-Part1-JGuerra
 	BY: JGuerra
 	CREATED:	02.01.16
-	MODIFIED:	02.01.16
+	MODIFIED:	02.03.16
 */
 
 /*
