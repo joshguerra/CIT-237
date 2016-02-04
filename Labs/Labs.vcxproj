@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Lab1B-JGuerra.cpp" />
+    <ClCompile Include="Lab1B-Part3-JGuerra.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{B969718B-3CC2-470E-9C04-A219D8FD9A1E}</ProjectGuid>
