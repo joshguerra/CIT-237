@@ -24,6 +24,9 @@
 	Design:
 
 	Declare a string pointer and an int to hold user input
+	Declare an input file stream object and an output one too
+
+	open file and read into groceries.txt
 
 	prompt user for length of grocery list
 	use input and pointer to dynamically create array
