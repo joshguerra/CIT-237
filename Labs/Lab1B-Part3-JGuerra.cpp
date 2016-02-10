@@ -3,7 +3,7 @@
 	FILE: Lab1B-Part3-JGuerra
 	BY: JGuerra
 	CREATED:	02.03.16
-	MODIFIED:	02.03.16
+	MODIFIED:	02.09.16
 */
 
 /*
@@ -26,14 +26,23 @@
 	Declare a string pointer and an int to hold user input
 	Declare an input file stream object and an output one too
 
-	open file and read into groceries.txt
+	if groceries.txt exists:
+		open groceries.txt and read into dynamically created array
+		don't forget to close the file 
+		
+		prompt user for extention length of grocery list
+		use input and pointer to dynamically extend the array
 
-	prompt user for length of grocery list
-	use input and pointer to dynamically create array
+		make function to extend grocery list:
+		for loop through extention length and prompt for next item
+		add string input to array through pointer
+	else
+		prompt user for length of grocery list
+		use input and pointer to dynamically create array
 
-	make function to load grocery list:
-	for loop through length of list and prompt for next item
-	add string input to array through pointer
+		make function to load grocery list:
+		for loop through length of list and prompt for next item
+		add string input to array through pointer
 
 	make input functions
 	make function for printing the array
@@ -57,11 +66,24 @@ using namespace std;
 // Post Condition:  Prints the first n elements of a[] to os
 void printStringArray(string a[], int n, ostream &os = cout);
 
-
 //  Pre Condition:  0 < n
 // Post Condition:  Creates a new string array with length of n
 //					Prompts user for string (and loads it into the new array) n times
-string* loadStringArray(int n);
+string* makeStringArray(int n);
+
+//  Pre Condition:  ifs must be a valid input file stream 
+// Post Condition:  Creates a new string array and reads into it from ifs
+//					Closes ifs
+//					Returns a pointer to the new array
+//					Sets n to length of the new array
+string* connectFileAndReadStringArray(ifstream &ifs, int &n);
+
+//  Pre Condition:  n is the physical size of a 
+// Post Condition:  appends m elements to a
+//					prompts user for the strings to append
+//					Sets n to the new length of the array
+//					returns the pointer for the array
+string* extendStringArray(string* a, int &n, int m);
 
 //  Pre Condition:	NONE
 // Post Condition:	Returns a valid positive integer
@@ -85,19 +107,20 @@ int getInt();
 double getNum();
 
 void main() {
-	int length;
+	int numLines;
 	int const SIZE_TITLE = 4;
 	
 	string fileName = "groceries.txt";
 	string *groceryList = nullptr;
 
 	string title[SIZE_TITLE] = {
-		"\t\t      Lab 1B Part 2      ",
+		"\t\t      Lab 1B Part 3      ",
 		"\t\t       Grocery List      ",
 		"\t\t        by JGuerra       ",
 		"\t\t Dynamically sized Array "
 	};
 
+	ifstream ifs;
 	ofstream ofs;
 
 	// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ 
@@ -107,21 +130,47 @@ void main() {
 	printStringArray(title, SIZE_TITLE);
 	cout << "\n\n";
 
-	// prompt for list length
-	cout << "How many items will be on your grocery list? ";
-	length = getPosInt();
+	// check for groceries.txt
+	cout << "\n\tChecking for " << fileName << "...";
+	ifs.open(fileName);
 
-	// add items to list
-	groceryList = loadStringArray(length);
+	// if open fails, make new array
+	if (ifs.fail()) {
+		// tell user what is happening
+		cout
+			<< "\n\tCould not find groceries.txt"
+			<< "\n\tCreating new grocery list..."
+			<< "\n\n";
+
+		// prompt for list length
+		cout << "How many items will be on your grocery list? ";
+		numLines = getPosInt();
+
+		// add items to list
+		groceryList = makeStringArray(numLines);
+	}
+
+	// else, read in array and extend
+	else {
+		// tell user what is happening
+		cout << "\n\tLoading list from groceries.txt...\n\n";
+		groceryList = connectFileAndReadStringArray(ifs, numLines);
+
+		// print to console
+		cout << "\nHere is your grocery list: \n";
+		printStringArray(groceryList, numLines);
+		cout << "\n\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ \n\n";
+	}
+
 
 	// print to console
 	cout << "\nHere is your grocery list: \n";
-	printStringArray(groceryList, length);
+	printStringArray(groceryList, numLines);
 	
 	// print to file
 	cout << "\n\nPrinting list to " << fileName << "...";
 	ofs.open(fileName);
-	printStringArray(groceryList, length, ofs);
+	printStringArray(groceryList, numLines, ofs);
 	ofs.close();
 	cout << "\nDone printing list\n\n";
 
@@ -133,7 +182,7 @@ void printStringArray(string a[], int n, ostream &os) {
 		os << (i == 0 ? "" : "\n") << a[i];
 }
 
-string* loadStringArray(int n) {
+string* makeStringArray(int n) {
 	string *a = new string[n];
 
 	for (int i = 0; i < n; i++) {
@@ -142,6 +191,30 @@ string* loadStringArray(int n) {
 	}
 
 	return a;
+}
+
+string* connectFileAndReadStringArray(ifstream &ifs, int &n) {
+	string *a = new string[];
+
+	while (!ifs.eof()) {
+		getline(ifs >> ws, a[n++]);
+	}
+	ifs.close();
+
+	// n increments after each use to make room for next element of a
+	// n results in a value 1 more than the physical size
+	// the next line corrects the value
+	n--;
+	return a;
+}
+
+//  Pre Condition:  n is the physical size of a 
+// Post Condition:  appends m elements to a
+//					prompts user for the strings to append
+//					Sets n to the new length of the array
+//					returns the pointer for the array
+string* extendStringArray(string* a, int &n, int m) {
+
 }
 
 int getPosInt() {
