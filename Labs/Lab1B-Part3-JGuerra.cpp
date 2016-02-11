@@ -4,7 +4,7 @@
 	BY: JGuerra
 	CREATED:	02.03.16
 	MODIFIED:	02.09.16
-*/
+	*/
 
 /*
 	Analysis
@@ -15,46 +15,54 @@
 	If groceries.txt exists, read it into the program
 	print it for the user
 	User provides number of additional items
-	User provides additional items 
+	User provides additional items
+	else
+	make a new list
+	user provides length of list
+	user provides items
 	Print the list back to the user
 	Print list to groceries.txt
-*/
+	*/
 
 /*
 	Design:
 
 	Declare a string pointer and an int to hold user input
 	Declare an input file stream object and an output one too
-
-	if groceries.txt exists:
-		open groceries.txt and read into dynamically created array
-		don't forget to close the file 
-		
-		prompt user for extention length of grocery list
-		use input and pointer to dynamically extend the array
-
-		make function to extend grocery list:
-		for loop through extention length and prompt for next item
-		add string input to array through pointer
-	else
-		prompt user for length of grocery list
-		use input and pointer to dynamically create array
-
-		make function to load grocery list:
-		for loop through length of list and prompt for next item
-		add string input to array through pointer
-
 	make input functions
 	make function for printing the array
 
-	open file
+	check for file and get number of lines
+
+	if groceries.txt does not exist:
+	tell user no file exists
+	prompt user for length of grocery list
+	use input and pointer to dynamically create array
+
+	make function to load grocery list:
+	for loop through length of list and prompt for next item
+	add string input to array through pointer
+	else
+	open groceries.txt and read into dynamically created array
+	don't forget to close the file
+
+	prompt user for extention length of grocery list
+	use input and pointer to dynamically extend the array
+
+	make function to extend grocery list:
+	for loop through extention length and prompt for next item
+	add string input to array through pointer
+
+	print grocery list to console
+
+	open output file
 	print to it using print function
 	close file
 
 	Testing:
 	I will be printing out what I input, so testing is taken care of
 	also can open file and view contents in windows file explorer
-*/
+	*/
 
 #include <iostream>
 #include <fstream>
@@ -71,12 +79,16 @@ void printStringArray(string a[], int n, ostream &os = cout);
 //					Prompts user for string (and loads it into the new array) n times
 string* makeStringArray(int n);
 
-//  Pre Condition:  ifs must be a valid input file stream 
+//  Pre Condition:  name is the file that will be attempted to open with ifs
+// Post Condition:  Returns the number of lines in the file, or -1 for fail to open
+//					closes ifs
+int connectFileAndGetNumLines(ifstream &ifs, string name);
+
+//  Pre Condition:  ifs must be a valid input file stream when opened with name
 // Post Condition:  Creates a new string array and reads into it from ifs
 //					Closes ifs
 //					Returns a pointer to the new array
-//					Sets n to length of the new array
-string* connectFileAndReadStringArray(ifstream &ifs, int &n);
+string* connectFileAndReadStringArray(ifstream &ifs, string name, int &n);
 
 //  Pre Condition:  n is the physical size of a 
 // Post Condition:  appends m elements to a
@@ -109,7 +121,7 @@ double getNum();
 void main() {
 	int numLines;
 	int const SIZE_TITLE = 4;
-	
+
 	string fileName = "groceries.txt";
 	string *groceryList = nullptr;
 
@@ -131,15 +143,21 @@ void main() {
 	cout << "\n\n";
 
 	// check for groceries.txt
-	cout << "\n\tChecking for " << fileName << "...";
-	ifs.open(fileName);
+	cout << "\nChecking for " << fileName << "...";
+	numLines = connectFileAndGetNumLines(ifs, fileName);
 
-	// if open fails, make new array
-	if (ifs.fail()) {
+	if (numLines != -1) {
+		// tell user what is happening
+		cout << "\nLoading list from groceries.txt...\n\n";
+		groceryList = connectFileAndReadStringArray(ifs, fileName, numLines);
+	}
+
+	else {
 		// tell user what is happening
 		cout
-			<< "\n\tCould not find groceries.txt"
-			<< "\n\tCreating new grocery list..."
+			// << "\nNumLines = " << numLines
+			<< "\nCould not find groceries.txt"
+			<< "\nCreating new grocery list..."
 			<< "\n\n";
 
 		// prompt for list length
@@ -150,25 +168,16 @@ void main() {
 		groceryList = makeStringArray(numLines);
 	}
 
-	// else, read in array and extend
-	else {
-		// tell user what is happening
-		cout << "\n\tLoading list from groceries.txt...\n\n";
-		groceryList = connectFileAndReadStringArray(ifs, numLines);
-
-		// print to console
-		cout << "\nHere is your grocery list: \n";
-		printStringArray(groceryList, numLines);
-		cout << "\n\n~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ \n\n";
-	}
-
+	// read in array and extend
+	cout << "~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ \n\n";
 
 	// print to console
-	cout << "\nHere is your grocery list: \n";
+	cout << "Here is your grocery list: \n";
 	printStringArray(groceryList, numLines);
-	
+	cout << "\n\n";
+
 	// print to file
-	cout << "\n\nPrinting list to " << fileName << "...";
+	cout << "Printing list to " << fileName << "...";
 	ofs.open(fileName);
 	printStringArray(groceryList, numLines, ofs);
 	ofs.close();
@@ -193,18 +202,36 @@ string* makeStringArray(int n) {
 	return a;
 }
 
-string* connectFileAndReadStringArray(ifstream &ifs, int &n) {
-	string *a = new string[];
+//  Pre Condition:  name is the file that will be attempted to open with ifs
+// Post Condition:  Returns the number of lines in the file, or -1 for fail to open
+//					closes ifs
+int connectFileAndGetNumLines(ifstream &ifs, string name) {
+	ifs.open(name);
+	int numLines = 0;
+	string trash;
 
-	while (!ifs.eof()) {
-		getline(ifs >> ws, a[n++]);
-	}
+	// if open fails return -1
+	if (ifs.fail())
+		return -1;
+	else
+		while (getline(ifs, trash))
+			numLines++;
+
 	ifs.close();
 
-	// n increments after each use to make room for next element of a
-	// n results in a value 1 more than the physical size
-	// the next line corrects the value
-	n--;
+	return numLines;
+}
+
+
+string* connectFileAndReadStringArray(ifstream &ifs, string name, int &n) {
+	string *a = new string[n];
+	ifs.open(name);
+
+	for (int i = 0; i < n; i++)
+		getline(ifs, a[i]);
+
+	ifs.close();
+
 	return a;
 }
 
