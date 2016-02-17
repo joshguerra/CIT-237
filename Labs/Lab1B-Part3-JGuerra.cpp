@@ -222,7 +222,6 @@ int connectFileAndGetNumLines(ifstream &ifs, string name) {
 	return numLines;
 }
 
-
 string* connectFileAndReadStringArray(ifstream &ifs, string name, int &n) {
 	string *a = new string[n];
 	ifs.open(name);
