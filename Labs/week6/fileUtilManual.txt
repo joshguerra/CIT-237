@@ -1,0 +1,23 @@
+Displays the contents of a file.
+
+DIR [-?][-m][-h][-t] [-n][X] [drive:][path]filename
+
+  -?          Displays this help information.
+
+  -m          Displays the first 24 lines of the file and then pauses
+              the program. Displays the next 24 lines of the file each
+              time the user hits enter.
+
+  -h          Displays the first 10 lines of the file.
+
+  -t          Displays the last 10 lines of the file.
+
+  -n          changes the number of lines displayed when used with -t or -h.
+              number of lines is set to X, 10 is default.
+
+  -?, -m, -h, -t
+              these options are mutually exclusive. only one option 
+              will be used based on the above priority
+  
+  [drive:][path]filename
+              Specifies drive, directory, and file to display.
