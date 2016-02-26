@@ -11,11 +11,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Lab1B-Part3-JGuerra.cpp" />
+    <ClCompile Include="jGuerraDisplay.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{B969718B-3CC2-470E-9C04-A219D8FD9A1E}</ProjectGuid>
-    <RootNamespace>Labs</RootNamespace>
+    <ProjectGuid>{A1AB1981-1BA7-472E-962A-C0BFB7140852}</ProjectGuid>
+    <RootNamespace>week6Labs</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
