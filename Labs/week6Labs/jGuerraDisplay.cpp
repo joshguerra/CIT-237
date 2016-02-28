@@ -85,24 +85,85 @@ using namespace std;
 // returns true if file successfully opens, else returns false
 bool openFileIn(fstream &file, string name);
 
+// file stream must be valid and open
+// returns number of lines in the file
+// clears internal state flags 
+// returns write position to beginning
+int getNumLines(fstream &file);
+
 void printHead(ifstream &file);
 void printTail();
-void printHead();	// overload
-void printTail();	// overload
+// void printHead();	// overload
+// void printTail();	// overload
 void printMore();
 void printHelp();
 void printFileLength();
 
-
 int main(int argc, char *argv[]) {
+	bool debug = false;
+
+	string fileName = "lorem.txt";
+	fstream file;
+	int numLines;
+
+	if (debug) {
+		cout << "arguments: " << argc << endl;
+		for (int i = 0; i < argc; i++) 
+			cout << i << ": " << argv[i] << endl;
+	}
+
+	bool
+		argH = false,
+		argT = false,
+		argM = false,
+		argL = false,
+		argN = false,
+		argHelp = false;
+	int n;
+
 	cout << "arguments: " << argc << endl;
 	for (int i = 0; i < argc; i++) {
-		cout << i << ": " << argv[i] << endl;
+		if (argv[i] == "-h") {
+			argH = true;
+			cout << "h: " << argH << endl;
+		}
+		else if (argv[i] == "-t") {
+			argT = true;
+			cout << "t: " << argT << endl;
+		}
+		else if (argv[i] == "-m") {
+			argM = true;
+			cout << "m: " << argM << endl;
+		}
+		else if (argv[i] == "-l") {
+			argL = true;
+			cout << "l: " << argL << endl;
+		}
+		else if (argv[i] == "-?") {
+			argHelp = true;
+			cout << "?: " << argHelp << endl;
+		}
+		else if (argv[i][0] > '0' && argv[i][0] < '9') {
+			argN = true;
+			n = atoi(argv[i]);
+			cout << "n: " << argN << " | "<< n << endl;
+		}
+		
 	}
+
+	openFileIn(file, fileName);
+	numLines = getNumLines(file);
+
+	if (debug)
+		cout << "numlines: " << numLines << endl;
 
 	system("pause");
 	return 0;
 }
+
+// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ //
+//	Function Definitions   //
+// ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ //
 
 bool openFileIn(fstream &file, string name) {
 	file.open(name, ios::in);
@@ -110,4 +171,20 @@ bool openFileIn(fstream &file, string name) {
 	if (file.fail())
 		return false;
 	return true;
+}
+
+// file stream must be valid and open
+// returns number of lines in the file
+// clears internal state flags 
+// returns write position to beginning
+int getNumLines(fstream &file) {
+	int count = 0;
+
+	while (file.ignore(100, '\n'))
+		count++;
+
+	file.clear();
+	file.seekg(0L, ios::beg);
+
+	return count;
 }
