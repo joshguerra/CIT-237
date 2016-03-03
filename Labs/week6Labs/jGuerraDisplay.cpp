@@ -3,8 +3,8 @@
 	jGuerraDisplay
 	by Josh Guerra
 	Created 02.22.16
-	Modified 02.29.16
-	Reason(s):	finishing command argument checking
+	Modified 03.02.16
+	Reason(s):	reworking reading and printing
 
 	Analysis - from book (p705-6)
 
@@ -66,6 +66,29 @@
 
 	assign each case an internal code 1-6
 	make a switch case to decide which function to call and which arguments to use
+
+	// opens file
+	// finds number of lines in file
+	// dynamically allocate array from pointer
+	// read file text into array
+	// close file
+	// returns numLines
+	int readFromFile(string* a, fstream &file, string fileName);
+
+	int readFromFile(string* a, fstream &file, string fileName) {
+	int numLines;
+
+	if (openFileIn(file, fileName)) {
+	numLines = getNumLines(file);
+	a = new string[numLines];
+	loadStringArrayFromFile(a, numLines, file);
+	file.close();
+	}
+
+	return numLines;
+	}
+
+
 	*/
 
 #include <iostream>
@@ -97,14 +120,6 @@ int getNumLines(fstream &file);
 // returns write position to beginning
 void loadStringArrayFromFile(string* a, int n, fstream &file);
 
-// opens file
-// finds number of lines in file
-// dynamically allocate array from pointer
-// read file text into array
-// close file
-// returns numLines
-int readFromFile(string* a, fstream &file, string fileName);
-
 // 0 < n <= LOGICAL size of a   
 // os must be a valid open output stream
 // prints the first n elements of a[] to os
@@ -128,15 +143,14 @@ int main(int argc, char *argv[]) {
 
 	bool debug = false;
 
-	string helpFile = "fileUtilManual.txt";
-	string* helpText = nullptr;
+	string helpFileName = "fileUtilManual.txt";
+	fstream helpFile;
 	int numLinesHelp;
 
 	string fileName;
-	string* fileText = nullptr;
+	fstream file;
 	int numLines;
 
-	fstream file;
 
 	// ~ ~ ~ ~ ~ ~ //
 	//  Procedure  //
@@ -148,15 +162,11 @@ int main(int argc, char *argv[]) {
 			cout << i << ": " << argv[i] << endl;
 	}
 
-	// load help text
-	numLinesHelp = readFromFile(helpText, file, helpFile);
-
 	switch (argc) {
 		case 2:
 			if (string(argv[1]) == "-?") {
 				// display help text
-				cout << "n: " << numLinesHelp << endl;
-				printStringArr(helpText, numLinesHelp);
+				openFileIn(helpFile, helpFileName);
 			}
 			else {
 				// more program
@@ -255,19 +265,6 @@ void loadStringArrayFromFile(string* a, int n, fstream &file) {
 
 	file.clear();
 	file.seekg(0L, ios::beg);
-}
-
-int readFromFile(string* a, fstream &file, string fileName) {
-	int numLines;
-
-	if (openFileIn(file, fileName)) {
-		numLines = getNumLines(file);
-		a = new string[numLines];
-		loadStringArrayFromFile(a, numLines, file);
-		file.close();
-	}
-
-	return numLines;
 }
 
 void printStringArr(string* a, int n, ostream &os) {
