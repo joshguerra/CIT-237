@@ -4,31 +4,31 @@
 	by Josh Guerra
 	Created 02.22.16
 	Modified 03.02.16
-	Reason(s):	reworking reading and printing
+	Reason(s):	finished implementing non array version
 
 	Analysis - from book (p705-6)
 
 	File Head Program
-	Write a program that asks the user for the name of a file.
-	The program should display the first 10 lines of the file on the
-	screen (the "head" of the file). If the file has fewer than 10 lines,
-	the entire file should be displayed, with a message indicating the
-	entire file has been displayed.
+		Write a program that asks the user for the name of a file.
+		The program should display the first 10 lines of the file on the
+		screen (the "head" of the file). If the file has fewer than 10 lines,
+		the entire file should be displayed, with a message indicating the
+		entire file has been displayed.
 
 	Tail Program
-	Write a program that asks the user for the name of a file.
-	The program should display the last 10 lines of the file on the screen
-	(the "tail" of the file). If the file has fewer than 10 lines, the
-	entire file should be displayed, with a message indicating the
-	entire file has been displayed.
+		Write a program that asks the user for the name of a file.
+		The program should display the last 10 lines of the file on the screen
+		(the "tail" of the file). If the file has fewer than 10 lines, the
+		entire file should be displayed, with a message indicating the
+		entire file has been displayed.
 
 	File More Program
-	Write a program that asks the user for the name of a file.
-	The program should display the contents of the file on the screen.
-	If the file’s contents won’t fit on a single screen, the program
-	should display 24 lines of output at a time, and then pause. Each
-	time the program pauses, it should wait for the user to strike a
-	key before the next 24 lines are displayed.
+		Write a program that asks the user for the name of a file.
+		The program should display the contents of the file on the screen.
+		If the file’s contents won’t fit on a single screen, the program
+		should display 24 lines of output at a time, and then pause. Each
+		time the program pauses, it should wait for the user to strike a
+		key before the next 24 lines are displayed.
 
 	Modifications (not in book):
 	the file name will be passed as a command line argument.
@@ -36,16 +36,16 @@
 	based on the options given when executed from the command line.
 
 	Cases:
-	program filename
-	program -?				will print out directions for running the file from the command prompt
+		program filename
+		program -?				will print out directions for running the file from the command prompt
 
-	program -m filename		will perform "more" operation
-	program –h filename		will perform the "head" operation
-	program –t filename		will perform the "tail" operation
-	program -l filename		will list number of lines in file
+		program -m filename		will perform "more" operation
+		program -h filename		will perform the "head" operation
+		program -t filename		will perform the "tail" operation
+		program -l filename		will list number of lines in file
 
-	program –h n filename	will perform the "head" operation for n lines
-	program –t n filename	will perform the "tail" operation for n lines
+		program -h n filename	will perform the "head" operation for n lines
+		program -t n filename	will perform the "tail" operation for n lines
 
 	Design
 
@@ -67,29 +67,7 @@
 	assign each case an internal code 1-6
 	make a switch case to decide which function to call and which arguments to use
 
-	// opens file
-	// finds number of lines in file
-	// dynamically allocate array from pointer
-	// read file text into array
-	// close file
-	// returns numLines
-	int readFromFile(string* a, fstream &file, string fileName);
-
-	int readFromFile(string* a, fstream &file, string fileName) {
-	int numLines;
-
-	if (openFileIn(file, fileName)) {
-	numLines = getNumLines(file);
-	a = new string[numLines];
-	loadStringArrayFromFile(a, numLines, file);
-	file.close();
-	}
-
-	return numLines;
-	}
-
-
-	*/
+*/
 
 #include <iostream>
 #include <fstream>
@@ -110,31 +88,29 @@ bool openFileIn(fstream &file, string name);
 // returns number of lines in the file
 // clears internal state flags 
 // returns write position to beginning
-int getNumLines(fstream &file);
+int getNumLines(fstream &file, string name);
 
-// 0 < n <= number of lines of text in file with filename  
-// 0 < n <= to the PHYSICAL size of a
-// file must be valid and open
-// Loads first n lines from file into the first n elements of a
-// clears internal state flags of file
-// returns write position to beginning
-void loadStringArrayFromFile(string* a, int n, fstream &file);
+// open file
+// print first n lines of file
+// close file
+void printHead(fstream &file, string name, int n = 10);
 
-// 0 < n <= LOGICAL size of a   
-// os must be a valid open output stream
-// prints the first n elements of a[] to os
-void printStringArr(string* a, int n, ostream &os = cout);
+// open file
+// print last n lines of file
+// close file
+void printTail(fstream &file, string name, int n = 10);
 
-// 0 < start <= LOGICAL size of a   
-// 0 < end <= LOGICAL size of a
-// start < end
-// os must be a valid open output stream
-// prints to os from a[start](inclusively) to a[end](exlusively)
-void printStringArr(string* a, int start, int end, ostream &os = cout);
+// open file
+// print file, 24 lines at a time
+// pause console each 24 lines
+// clear console after pause
+// close file
+void printMore(fstream &file, string name);
 
-void printHead(string* text, int numLines, int n = 10);
-void printTail(string* text, int numLines, int n = 10);
-void printMore(string* text, int numLines);
+// open file
+// print whole file
+// close file
+void printFile(fstream &file, string name);
 
 int main(int argc, char *argv[]) {
 	// ~ ~ ~ ~ ~ ~ //
@@ -145,12 +121,11 @@ int main(int argc, char *argv[]) {
 
 	string helpFileName = "fileUtilManual.txt";
 	fstream helpFile;
-	int numLinesHelp;
 
 	string fileName;
 	fstream file;
-	int numLines;
 
+	string text;
 
 	// ~ ~ ~ ~ ~ ~ //
 	//  Procedure  //
@@ -164,38 +139,48 @@ int main(int argc, char *argv[]) {
 
 	switch (argc) {
 		case 2:
+			// program -?			print help
 			if (string(argv[1]) == "-?") {
-				// display help text
-				openFileIn(helpFile, helpFileName);
+				printFile(helpFile, helpFileName);
 			}
+
+			// program filename		print more
 			else {
-				// more program
 				fileName = argv[argc - 1];
-				numLines = readFromFile(fileText, file, fileName);
-				printMore(fileText, numLines);
+				printMore(file, fileName);
 			}
+
 			break;
 
 		case 3:
-
 			fileName = argv[argc - 1];
-			numLines = readFromFile(fileText, file, fileName);
 
 			switch (argv[1][1]) {
+				// program -m filename		print more
 				case 'm':
-					printMore(fileText, numLines);
+					printMore(file, fileName);
 					break;
+
+				// program -h filename		print head
 				case 'h':
-					printHead(fileText, numLines);
+					printHead(file, fileName);
 					break;
+
+				// program -t filename		print tail
 				case 't':
-					printTail(fileText, numLines);
+					printTail(file, fileName);
 					break;
+
+				// program -l filename		print number of lines
 				case 'l':
-					cout << numLines << endl;
+					openFileIn(file, fileName);
+					cout << getNumLines(file, fileName) << endl;
+					file.close();
+					break;
+
+				// help text if invalid switches used
 				default:
-					// display help text
-					printStringArr(helpText, numLinesHelp);
+					printFile(helpFile, helpFileName);
 			}
 
 			break;
@@ -203,28 +188,32 @@ int main(int argc, char *argv[]) {
 		case 4:
 
 			fileName = argv[argc - 1];
-			numLines = readFromFile(fileText, file, fileName);
-
 			switch (argv[1][1]) {
+				// program -h filename		print head
 				case 'h':
-					printHead(fileText, numLines, atoi(argv[2]));
+					printHead(file, fileName, atoi(argv[2]));
 					break;
+
+				// program -t filename		print tail
 				case 't':
-					printTail(fileText, numLines, atoi(argv[2]));
+					printTail(file, fileName, atoi(argv[2]));
 					break;
+				
+				// help text if invalid switches used
 				default:
-					// display help text
-					printStringArr(helpText, numLinesHelp);
+					printFile(helpFile, helpFileName);
 			}
 
 			break;
 
+		// help text if invalid number of arguments used
 		case 0:
 		case 1:
 		default:
-			printStringArr(helpText, numLinesHelp);
+			printFile(helpFile, helpFileName);
 	}
 
+	cout << endl;
 	system("pause");
 	return 0;
 }
@@ -247,7 +236,7 @@ bool openFileIn(fstream &file, string name) {
 	return true;
 }
 
-int getNumLines(fstream &file) {
+int getNumLines(fstream &file, string name) {
 	int count = 0;
 
 	while (file.ignore(100, '\n'))
@@ -259,55 +248,59 @@ int getNumLines(fstream &file) {
 	return count;
 }
 
-void loadStringArrayFromFile(string* a, int n, fstream &file) {
-	for (int i = 0; i < n; i++)
-		getline(file, a[i]);
+void printHead(fstream &file, string name, int n) {
+	string text;
 
-	file.clear();
-	file.seekg(0L, ios::beg);
+	openFileIn(file, name);
+
+	// print first n lines or until end of file
+	for (int i = 0; i < n && getline(file, text); i++)
+		cout << text << endl;
+
+	file.close();
 }
 
-void printStringArr(string* a, int n, ostream &os) {
-	for (int i = 0; i < n; i++)
-		os << "\n" << a[i];
-}
+void printTail(fstream &file, string name, int n) {
+	string text;
+	int numLines;
 
-void printStringArr(string* a, int start, int end, ostream &os) {
-	for (int i = start; i < end; i++)
-		os << "\n" << a[i];
-}
+	openFileIn(file, name);
+	numLines = getNumLines(file, name);
 
-void printHead(string* text, int numLines, int n) {
-	if (numLines < n)
-		printStringArr(text, numLines);
-	else
-		printStringArr(text, n);
-}
-
-void printTail(string* text, int numLines, int n) {
-	if (numLines < n)
-		printStringArr(text, numLines);
-	else
-		printStringArr(text, numLines - n, numLines);
-}
-
-void printMore(string* text, int numLines) {
-	int more = 24,		// number of lines to print at a time
-		currentLine = 0,
-		linesLeft = numLines;
-
-	while (linesLeft) {
-		if (linesLeft < more) {
-			printStringArr(text, linesLeft);
-			currentLine += linesLeft;
-			linesLeft = 0;
-		}
-		else {
-			printStringArr(text, currentLine, currentLine + more);
-			currentLine += more;
-			linesLeft -= more;
-		}
-
+	// ignore all but last n lines
+	for (int i = 0; i < (numLines - n); i++)
+		file.ignore(100, '\n');
+	
+	// print whats left
+	while (getline(file, text)) {
+		cout << text << endl;
 	}
+	file.close();
+}
 
+void printMore(fstream &file, string name) {
+	string text;
+	int more = 24;		// number of lines to print at a time
+	int count = 0;
+
+	openFileIn(file, name);
+	while (getline(file, text)) {
+		cout << text << endl;
+		if (count++ % more == more - 1) {
+			cout << endl;
+			system("pause");
+			system("cls");
+		}
+	}
+	file.close();
+}
+
+void printFile(fstream &file, string name) {
+	string text;
+
+	openFileIn(file, name);
+	while (getline(file, text)) {
+		cout << text << endl;
+	}
+	file.close();
 }

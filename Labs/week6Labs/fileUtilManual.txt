@@ -1,24 +1,14 @@
 Displays the contents of a file.
 
-DIR [-?][-m][-h][-t][-l] [n] [path]filename
+program filename
+program -m filename     Displays the file, 24 lines at a time.
 
-  -?          Displays this help information.
+program -?              Displays this help information.
 
-  -m          Displays the first 24 lines of the file and then pauses
-              the program. Displays the next 24 lines of the file each
-              time the user hits enter. This is default behavior.
+program -l filename     Displays the number of lines in the file.
 
-  -h          Displays the first 10 lines of the file.
+program -h filename     Displays the first 10 lines of the file.
+program -h n filename   Displays the first n lines of the file.
 
-  -t          Displays the last 10 lines of the file.
-
-  -l          Displays the number of lines in the file
-
-  -?, -m, -h, -t, -l
-              These options are mutually exclusive. 
-              Please only use one.
-
-  n           Displays n lines when used with -t or -h.
-  
-  [path]filename
-              Specifies drive, directory, and file to display.
+program -t filename     Displays the last 10 lines of the file.
+program -t n filename   Displays the last n lines of the file.

@@ -13,6 +13,10 @@
   <ItemGroup>
     <ClCompile Include="jGuerraDisplay.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="fileUtilManual.txt" />
+    <Text Include="lorem.txt" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A1AB1981-1BA7-472E-962A-C0BFB7140852}</ProjectGuid>
     <RootNamespace>week6Labs</RootNamespace>
