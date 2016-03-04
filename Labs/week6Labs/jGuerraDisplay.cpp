@@ -67,6 +67,10 @@
 	assign each case an internal code 1-6
 	make a switch case to decide which function to call and which arguments to use
 
+	Testing 
+
+	using debug properties in visual studio to pass parameters and monitor program behavior.
+
 */
 
 #include <iostream>

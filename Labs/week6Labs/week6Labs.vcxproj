@@ -11,11 +11,13 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="jGuerraDisplay.cpp" />
+    <ClCompile Include="XBT_struct.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="fileUtilManual.txt" />
-    <Text Include="lorem.txt" />
+    <None Include="32XBT.dat" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="32XBT.flat1.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{A1AB1981-1BA7-472E-962A-C0BFB7140852}</ProjectGuid>

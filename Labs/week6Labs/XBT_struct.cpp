@@ -5,18 +5,21 @@
 	Created 02.24.16
 	Modified 02.24.16
 
-	1 - open file
-	2 - read in all good data once
-	3 - parse date and time
-	4 - find number of valid records
-	5 - allocate array
-	6 - file.clear and file.seekg
-	7 - fill arrays
-	8 - write struct to binary file
+	1  - open file
+	2  - read in all good data once
+	3  - parse date and time
+	4  - find number of valid records
+	5  - allocate array
+	6  - file.clear and file.seekg
+	7  - fill arrays
+	8  - write struct to binary file
+	9  - read binary back
+	10 - print data to console
 
-*/
+	*/
 
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <string>
 using namespace std;
@@ -88,6 +91,8 @@ void loadXBTdata(fstream &file, DataPoint* dataArray, int n);
 // file is closed
 void writeToBinary(fstream &file, string name, XBT xbt, DataPoint* data);
 
+void printFromBinary(fstream &file, string name, XBT xbt, DataPoint* data);
+
 int main() {
 	// ~ ~ ~ ~ ~ ~ //
 	//	Variables  //
@@ -102,6 +107,7 @@ int main() {
 	// output file
 	string datFile = "32XBT.dat";
 	fstream xbtDatFile;
+	fstream xbtBinFile;
 
 	// pre-parsed input data
 	long rawDate;
@@ -110,7 +116,10 @@ int main() {
 	// for dynamically allocated array
 	DataPoint *data = nullptr;
 
+	string xbtHeader;
+
 	XBT xbtData;
+	XBT xbtBinData = {};
 
 	// ~ ~ ~ ~ ~ ~ //
 	//	Procedure  //
@@ -156,20 +165,32 @@ int main() {
 		if (debug) {
 			for (int i = 0; i < xbtData.numRecords; i++)
 				cout
-					<< "Record #" << i
-					<< ": \tDepth: " << data[i].depth
-					<< "\tTemp: " << data[i].temp
-					<< endl;
+				<< "Record #" << i << ": \tDepth: " << data[i].depth
+				<< "\tTemp: " << data[i].temp << endl;
 		}
 
 		// write to output file
 		writeToBinary(xbtDatFile, datFile, xbtData, data);
 	}
-	else 
+	else
 		cout << "could not load file..." << endl;
 
+	// printing binary back out to console
+	cout << "\n\tReading data in from binary..." << endl;
 	system("pause");
-	delete data;		// deallocate memory for array
+	system("cls");
+
+	// read and print header from original
+	if (openFileIn(xbtFile, fileName)) {
+		getline(xbtFile, xbtHeader);
+		xbtFile.close();
+		cout << xbtHeader << endl;
+	}
+
+	delete data;
+	printFromBinary(xbtBinFile, datFile, xbtBinData, data);
+
+	system("pause");
 	return 0;
 }
 
@@ -199,7 +220,7 @@ int findNumValidEntries(fstream &file) {
 		file >> temp;
 
 		// test before incrementing count to avoid miscounting
-		if (temp < 30.0) 
+		if (temp < 30.0)
 			count++;
 	}
 
@@ -254,4 +275,31 @@ void writeToBinary(fstream &file, string name, XBT xbt, DataPoint* data) {
 
 	// close file
 	file.close();
+}
+
+void printFromBinary(fstream &file, string name, XBT xbt, DataPoint* data) {
+	long date;
+	int time;
+
+	// open file
+	file.open(name, ios::binary | ios::in);
+
+	// read xbt struct (all the unchanging data from xbt records)
+	file.read(reinterpret_cast<char *>(&xbt), sizeof(xbt));
+	data = new DataPoint[xbt.numRecords];
+
+	// write data array (depth and temp pairs)
+	for (int i = 0; i < xbt.numRecords; i++)
+		file.read(reinterpret_cast<char *>(&data[i]), sizeof(data[i]));
+
+	date = xbt.date.year * 1000L + xbt.date.month * 100L + long(xbt.date.day);
+	time = int(xbt.time.hours) * 100 + int(xbt.time.minutes);
+
+	// printing
+	for (int i = 0; i < xbt.numRecords; i++)
+		cout
+			<< right << xbt.seqNum << setw(11) << date << setw(7) 
+			<< time << setw(8) << xbt.pos.lon << setw(10) << xbt.pos.lat 
+			<< "  " << setw(11) << left << data[i].depth << data[i].temp << endl;
+			
 }
