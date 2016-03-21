@@ -1,28 +1,36 @@
+#ifndef BOX_H
+#define BOX_H
 #include <iostream>
 using namespace std;
 
 class Box {
-private : 
-	int static numBoxes;
+private:
 	double length;
 	double width;
 	double height;
+	double checkValue(double v);
+	static int numBoxes;
 
 public:
-	Box(double l = 1, double w = 1, double h = 1);
-	~Box() { cout << "Destructing..." << endl; numBoxes--; }
+	//Box();
+	Box(double l = 1., double w = 1., double h = 1.);
 
-	// set to 1 if given a zero or negative value
-	void setLength(double l) { length = (l <= 0 ? 1 : l); }
-	void setWidth(double w) { width = (w <= 0 ? 1 : w); }
-	void setHeight(double h) { height = (h <= 0 ? 1 : h); }
+	~Box() {
+		numBoxes--;
+		cout << "destructor called\n";
+	}
+	
+	int getNumBoxes() const { return numBoxes; }
+	void setLength(double l);
+	void setWidth(double w);
+	void setHeight(double h);
 
-	double getLength() { return length; }
-	double getWidth() { return width; }
-	double getHeight() { return height; }
-	int getNumBoxes() { return numBoxes; }
+	double getLength() const { return length; }
+	double getHeight() const { return height; }
+	double getWidth() const { return width; }
 
-	double getVolume() { return length * width * height; }
 	double getSurfaceArea();
+	double getVolume();
 	void printBox();
 };
+#endif

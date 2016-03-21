@@ -10,6 +10,9 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="testCode.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{77A6B279-7DD4-4EAE-91B5-A749B462DFC4}</ProjectGuid>
     <RootNamespace>Sandbox</RootNamespace>
@@ -63,14 +66,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="Box.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Box.cpp" />
-    <ClCompile Include="Panda.cpp" />
-    <ClCompile Include="testBox.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

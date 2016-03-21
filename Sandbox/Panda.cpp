@@ -1,29 +1,40 @@
-#include <iostream>
-#include <string>
+#include "Panda.h"
 using namespace std;
 
-class Panda {
-private:
-	string name;
-	double weight;
-	Date birthday;
-	static int numPandas;
-
-public:
-	Panda(string n = "Po", double w = 300, Date bday = { 2012, 11, 05 });
-	~Panda();
-
-	void setName(string n) { name = n; }
-	void setBirthday(Date bday);
-
-	// lower bound is 0.2 lbs (cub). upper bound 400 lbs
-	void setWeight(double w) { weight = (w < 0.2 ? 0.2 : w > 400 ? 400 : w); }
+Panda::Panda(string n) {
+	Date date;
+	// set a birthday at random
 
 
-};
+	
+	switch (date.getMonth()) {
+		// range of dates is 1 - 28
+		// 1 - 29 if leap year
+		case 2:
+		// range of dates is 1 - 30
+		case 4:
+		case 6:
+		case 9:
+		case 11:
+		// range of dates is 1 - 31
+		default:
 
-struct Date {
-	short year;
-	short month;
-	short day;
-};
+	}
+
+
+	setName(n);
+	setBirthday(date);
+	// setWeight();
+	numPandas++;
+}
+
+void Panda::setName(string n) {
+	name = n;
+}
+void Panda::setBirthday(Date bday) {
+	birthday = bday;
+
+}
+void Panda::setWeight(double w) {
+
+}
