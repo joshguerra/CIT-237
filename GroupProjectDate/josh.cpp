@@ -86,6 +86,32 @@ bool Date::isLeapYear(int year) {
 	return year % 400 == 0 || (year % 4 == 0 && year % 100 != 0);
 }
 
+void Date::normalizeDate() {
+	while (month > 12 || day > daysPerMonth[month] + isLeapYear(year)) {
+		while (month > 12) {
+			year++;
+			month -= 12;
+		}
+		while (day > daysPerMonth[month]) {
+			month++;
+			day -= daysPerMonth[month] + isLeapYear(year);
+		}
+	}
+}
+
+istream &operator >> (istream &is, Date &obj) {
+	cout << "Year: ";
+	obj.setYear(obj.getValidYear());
+
+	cout << "Month: ";
+	obj.setMonth(obj.getValidMonth());
+
+	cout << "Day: ";
+	obj.setDay(obj.getValidDay());
+
+	return is;
+}
+
 void main() {
 	
 
