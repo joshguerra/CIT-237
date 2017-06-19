@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="testCode.cpp" />
+    <ClCompile Include="readFromBinary++.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{77A6B279-7DD4-4EAE-91B5-A749B462DFC4}</ProjectGuid>

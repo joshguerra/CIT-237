@@ -1,0 +1,60 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+
+void main() {
+	int const SIZE = 10;
+	int intArr[SIZE];
+	double dblArr[SIZE];
+	string strArr[] = {
+		"gas",
+		"utilities",
+		"IRS Tax payments",
+		"entertainment",
+		"rent",
+		"groceries",
+		"gym membership",
+		"travel",
+		"tolls",
+		"miscellaneous"
+	};
+
+	string textFN = "dataToo.txt";
+	string binFN = "dataToo.dat";
+	char* cstr;
+
+	fstream file;
+
+	for (int i = 0; i < SIZE; i++) {
+		intArr[i] = (i + 10) * 557;
+		dblArr[i] = i * 128.753;
+	}
+
+	cout << "opening text output file... \n";
+	file.open(textFN, ios::out);
+	cout << "writing text to file... \n";
+	for (int i = 0; i < SIZE; i++)
+		file
+			<< intArr[i] << " "
+			<< dblArr[i] << " "
+			<< strArr[i] << endl;
+
+	cout << "closing output file... \n";
+	file.close();
+
+	cout << "\n ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ \n\n";
+
+	cout << "opening binary output file... \n";
+	file.open(binFN, ios::out | ios::binary);
+	cout << "writing binary to file... \n";
+	for (int i = 0; i < SIZE; i++) {
+		file.write(reinterpret_cast<char *>(&intArr[i]), sizeof(int));
+		file.write(reinterpret_cast<char *>(&dblArr[i]), sizeof(double));
+		file.write(reinterpret_cast<char *>(&), 20L);
+	}
+	cout << "closing output file... \n";
+	file.close();
+
+	system("pause");
+}

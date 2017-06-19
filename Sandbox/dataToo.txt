@@ -1,0 +1,10 @@
+5570 0 gas
+6127 128.753 utilities
+6684 257.506 IRS Tax payments
+7241 386.259 entertainment
+7798 515.012 rent
+8355 643.765 groceries
+8912 772.518 gym membership
+9469 901.271 travel
+10026 1030.02 tolls
+10583 1158.78 miscellaneous

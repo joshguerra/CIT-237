@@ -15,7 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="testCode.cpp">
+    <ClCompile Include="readFromBinary++.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
